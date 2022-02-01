@@ -29,11 +29,11 @@ defmodule CredoJenkins.IssueTransformer do
       "message" => check,
       "description" => message,
       "category" => category,
-      "moduleName" => scope,
-      "origin" => trigger
+      "moduleName" => scope
     }
     |> put_if_valid("columnStart", get_val("column", issue))
     |> put_if_valid("columnEnd", get_val("column_end", issue))
+    |> put_if_valid("origin", get_val("trigger", issue))
   end
 
   defp put_if_valid(map, _key_name, :invalid), do: map
@@ -47,4 +47,6 @@ defmodule CredoJenkins.IssueTransformer do
 
   defp get_val("column", %{"column" => column}) when is_integer(column), do: {:ok, column}
   defp get_val("column", _), do: :invalid
+
+  defp get_val(value_name, issue), do: Map.get(issue, value_name, :invalid)
 end
