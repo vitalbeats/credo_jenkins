@@ -1,4 +1,6 @@
 defmodule CredoJenkins do
+  alias CredoJenkins.IssueTransformer
+
   @moduledoc """
   Reads a credo report in a json format
   (`mix credo --strict --format json > credo.json`)
@@ -23,42 +25,11 @@ defmodule CredoJenkins do
     read_credo_report!(input_path)
     |> Enum.map_join("\n", fn item ->
       item
-      |> transform_issue()
+      |> IssueTransformer.transform()
       |> Jason.encode!()
     end)
     |> write_credo_report!(output_path)
   end
-
-  @doc """
-  Transforms a single Credo issue item into a format
-  that Jenkins can natively read.
-
-  We mark all as "error" severity as Credo does not offer severity levels.
-  """
-  def transform_issue(%{
-        "category" => category,
-        "check" => check,
-        "column" => column,
-        "column_end" => column_end,
-        "filename" => filename,
-        "line_no" => line_no,
-        "message" => message,
-        "scope" => scope,
-        "trigger" => trigger
-      }),
-      do: %{
-        "fileName" => filename,
-        "severity" => "ERROR",
-        "lineStart" => line_no,
-        "lineEnd" => line_no,
-        "columnStart" => column,
-        "columnEnd" => column_end,
-        "message" => check,
-        "description" => message,
-        "category" => category,
-        "moduleName" => scope,
-        "origin" => trigger
-      }
 
   defp read_credo_report!(report_path) do
     {:ok, body} = File.read(report_path)
