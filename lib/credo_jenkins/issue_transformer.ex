@@ -17,8 +17,7 @@ defmodule CredoJenkins.IssueTransformer do
           "filename" => filename,
           "line_no" => line_no,
           "message" => message,
-          "scope" => scope,
-          "trigger" => trigger
+          "scope" => scope
         } = issue
       ) do
     %{
@@ -40,13 +39,16 @@ defmodule CredoJenkins.IssueTransformer do
   defp put_if_valid(map, key_name, value), do: Map.put(map, key_name, value)
 
   defp get_val("column_end", %{"column_end" => column_end}) when is_integer(column_end),
-    do: {:ok, column_end}
+    do: column_end
 
-  defp get_val("column_end", %{"column" => column}) when is_integer(column), do: {:ok, column}
+  defp get_val("column_end", %{"column" => column}) when is_integer(column), do: column
   defp get_val("column_end", _), do: :invalid
 
-  defp get_val("column", %{"column" => column}) when is_integer(column), do: {:ok, column}
+  defp get_val("column", %{"column" => column}) when is_integer(column), do: column
   defp get_val("column", _), do: :invalid
+
+  defp get_val("trigger", %{"trigger" => trigger}) when is_bitstring(trigger), do: trigger
+  defp get_val("trigger", _), do: :invalid
 
   defp get_val(value_name, issue), do: Map.get(issue, value_name, :invalid)
 end

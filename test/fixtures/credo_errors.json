@@ -3,14 +3,14 @@
         {
             "category": "readability",
             "check": "Credo.Check.Readability.ParenthesesOnZeroArityDefs",
-            "column": null,
-            "column_end": null,
+            "column": 1,
+            "column_end": 12,
             "filename": "lib/styx/api.ex",
             "line_no": 38,
             "message": "Do not use parentheses when defining a function which has no arguments.",
             "priority": -8,
             "scope": "Styx.Api.mark",
-            "trigger": null
+            "trigger": "IO.inspect/1"
         },
         {
             "category": "readability",
