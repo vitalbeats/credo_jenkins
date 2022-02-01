@@ -1,0 +1,13 @@
+# Elixir
+/_build/
+/cover/
+/deps/
+/doc/
+erl_crash.dump
+*.ez
+/priv/static/
+
+# VSCode
+/.elixir_ls/
+/.vscode/
+/.tmp/
