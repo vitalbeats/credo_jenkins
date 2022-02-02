@@ -1,6 +1,9 @@
 # CredoJenkins
 
-**TODO: Add description**
+Reads a credo report in a json format (`mix credo --strict --format json > credo.json`) and transforms it into a format that Jenkins can natively understand.
+
+As seen in: https://github.com/jenkinsci/warnings-ng-plugin/blob/master/plugin/src/test/resources/io/jenkins/plugins/analysis/warnings/steps/json-issues.log
+
 
 ## Local Development
 ## Running Docker Locally
@@ -16,12 +19,13 @@ docker exec -ti credo_jenkins sh
 
 mix test
 mix credo --strict
+mix docs
 ```
 
 # Releases
 We tag our releases with semver in mind.
 ```bash
-git tag -a 0.1.0 -m "version 0.1.0"
+git tag -a 0.1.1 -m "version 0.1.1"
 git push origin --tags
 ```
 
