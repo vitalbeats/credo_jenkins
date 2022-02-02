@@ -16,28 +16,60 @@ defmodule CredoJenkins do
   Reads a credo json report from a given path, transforms it
   and outputs to a given path.
 
-  ## Examples
+  ## Examples:
 
-      iex> CredoJenkins.transform("credo.json", "credo.log")
-      :ok
+    iex> CredoJenkins.run("credo.json", "credo.log")
+    :ok
   """
-  def transform(input_path, output_path) do
-    read_credo_report!(input_path)
-    |> Enum.map_join("\n", fn item ->
-      item
-      |> IssueTransformer.transform()
-      |> Jason.encode!()
-    end)
+  def run(input_path, output_path) do
+    input_path
+    |> read_credo_report!()
+    |> transform()
+    |> dummy_report_if_empty()
     |> write_credo_report!(output_path)
   end
 
-  defp read_credo_report!(report_path) do
+  @doc """
+  Takes an array of Credo issue maps and reduces them
+  into a string that Jenkins can later read.
+
+  ## Examples
+
+      iex> CredoJenkins.transform([])
+      ""
+
+      iex> transform([%{...}, %{...}])
+      "{...} {...}"
+  """
+  def transform(credo_report),
+    do:
+      Enum.map_join(credo_report, "\n", fn item ->
+        item
+        |> IssueTransformer.transform()
+        |> Jason.encode!()
+      end)
+
+  @doc """
+  Reads and parses the Credo output from a given file on disk.
+  Will raise if the file dows not exist or if it is not a proper
+  JSON formatted Credo report.
+
+  ## Examples
+
+      iex> CredoJenkins.read_credo_report!("credo.json")
+      []
+
+      iex> CredoJenkins.read_credo_report!("credo.xml")
+      Jason.DecodeError
+  """
+  def read_credo_report!(report_path) do
     {:ok, body} = File.read(report_path)
     %{"issues" => issues} = Jason.decode!(body)
     issues
   end
 
-  defp write_credo_report!(report, output_path) do
-    File.write(output_path, report)
-  end
+  defp dummy_report_if_empty(""), do: "// end"
+  defp dummy_report_if_empty(report), do: report
+
+  defp write_credo_report!(report, output_path), do: File.write(output_path, report)
 end
