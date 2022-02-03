@@ -12,4 +12,4 @@ mix local.hex --force && mix local.rebar --force
 mix deps.get || true
 
 echo "[Success] Container Running"
-tail -f /dev/null
+exec "$@"
