@@ -1,4 +1,4 @@
-FROM elixir:1.13-alpine
+FROM elixir:1.18.3-otp-26-alpine
 
 WORKDIR /app
 
