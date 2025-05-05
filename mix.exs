@@ -22,8 +22,7 @@ defmodule CredoJenkins.MixProject do
   defp deps do
     [
       {:jason, "~> 1.3"},
-      {:credo, "~> 1.6"},
-      {:ex_doc, "~> 0.28.0"}
+      {:credo, "~> 1.6"}
     ]
   end
 end
